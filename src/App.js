@@ -3,13 +3,30 @@ import './App.css';
 import todoList from './todos.json';
 
 class TodoItem extends Component {
+  state = {
+    completed: this.props.completed
+  }
+
+  handleCheck = (event) => {
+    this.setState({
+      completed: event.target.checked
+    })
+  }
+
+  handleDestroy = (event) => {
+    
+  }
+
   render() {
     return (
-      <li className={this.props.completed ? 'completed' : 'not-completed'}>
+      <li className={this.state.completed ? 'completed' : 'not-completed'}>
 		  	<div className="view">
-		  		<input className="toggle" type="checkbox" />
+		  		{this.props.completed
+            ? <input className="toggle" defaultChecked type="checkbox" onClick={this.handleClick}/>
+            : <input className="toggle" type="checkbox" onClick={this.handleCheck}/>
+          }
 		  		<label>{this.props.title}</label>
-		  		<button className="destroy"></button>
+		  		<button className="destroy" onClick={this.handleDestroy}></button>
 		  	</div>
 		  </li>
     )
@@ -27,10 +44,21 @@ class TodoList extends Component {
 }
 
 class App extends Component {
+  state = {
+    todos: todoList.slice()
+  }
 
   handleKeyPress = (event) => {
     if(event.key === 'Enter'){
-      console.log("new list item:", event.target.value);
+      this.setState({todos: [
+        ...this.state.todos,
+        {
+          id: this.state.todos.length + 1,
+          title: event.target.value,
+          completed: false
+        }
+      ]})
+      event.target.value = "";
     }
   }
 
@@ -39,10 +67,10 @@ class App extends Component {
       <div className="todoapp">
         <header className="header">
           <h1>todos</h1>
-          <input className="new-todo" placeholder="This logs to the console" onKeyPress={this.handleKeyPress} autoFocus />
+          <input className="new-todo" placeholder="What do you need to do today?" onKeyPress={this.handleKeyPress} autoFocus />
         </header>
 			  <section className="main">
-          <TodoList todos={todoList} />
+          <TodoList todos={this.state.todos} />
 			  </section>
 			  <footer className="footer">
 			  	<span className="todo-count"><strong>0</strong> item(s) left</span>

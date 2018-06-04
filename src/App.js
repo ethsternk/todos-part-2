@@ -13,10 +13,6 @@ class TodoItem extends Component {
     })
   }
 
-  handleDestroy = (event) => {
-    
-  }
-
   render() {
     return (
       <li className={this.state.completed ? 'completed' : 'not-completed'}>

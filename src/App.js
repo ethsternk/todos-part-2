@@ -40,7 +40,7 @@ class App extends Component {
       <div className="todoapp">
         <header className="header">
           <h1>todos</h1>
-          <input className="new-todo" placeholder="What needs to be done?" onKeyPress={this.handleKeyPress} autofocus />
+          <input className="new-todo" placeholder="This logs to the console" onKeyPress={this.handleKeyPress} autofocus />
         </header>
 			  <section className="main">
           <TodoList todos={todoList} />

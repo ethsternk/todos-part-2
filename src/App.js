@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import todoList from './todos.json';
 
@@ -21,7 +20,7 @@ class TodoList extends Component {
   render() {
     return (
       <ul className="todo-list">
-        {this.props.todos.map( todo => <TodoItem title={todo.title} completed={todo.completed} /> )}
+        {this.props.todos.map( todo => <TodoItem key={todo.id} title={todo.title} completed={todo.completed} /> )}
       </ul>
     )
   }
@@ -30,7 +29,7 @@ class TodoList extends Component {
 class App extends Component {
 
   handleKeyPress = (event) => {
-    if(event.key == 'Enter'){
+    if(event.key === 'Enter'){
       console.log("new list item:", event.target.value);
     }
   }
@@ -40,7 +39,7 @@ class App extends Component {
       <div className="todoapp">
         <header className="header">
           <h1>todos</h1>
-          <input className="new-todo" placeholder="This logs to the console" onKeyPress={this.handleKeyPress} autofocus />
+          <input className="new-todo" placeholder="This logs to the console" onKeyPress={this.handleKeyPress} autoFocus />
         </header>
 			  <section className="main">
           <TodoList todos={todoList} />

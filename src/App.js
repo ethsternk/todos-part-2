@@ -15,7 +15,7 @@ class TodoItem extends Component {
 
   render() {
     return (
-      <li className={this.state.completed ? 'completed' : 'not-completed'}>
+      <li className={this.state.completed ? 'completed' : 'not-completed'} id={this.props.id}>
 		  	<div className="view">
 		  		{this.props.completed
             ? <input className="toggle" defaultChecked type="checkbox" onClick={this.handleClick}/>
@@ -23,6 +23,7 @@ class TodoItem extends Component {
           }
 		  		<label>{this.props.title}</label>
 		  		<button className="destroy" onClick={this.handleDestroy}></button>
+          {this.props.children}
 		  	</div>
 		  </li>
     )
@@ -33,7 +34,10 @@ class TodoList extends Component {
   render() {
     return (
       <ul className="todo-list">
-        {this.props.todos.map( todo => <TodoItem key={todo.id} title={todo.title} completed={todo.completed} /> )}
+        {this.props.todos.map( todo =>
+          <TodoItem id={todo.id} key={todo.id} title={todo.title} completed={todo.completed}>
+            {this.props.children}
+          </TodoItem> )}
       </ul>
     )
   }
@@ -45,17 +49,28 @@ class App extends Component {
   }
 
   handleKeyPress = (event) => {
-    if(event.key === 'Enter'){
+    if(event.key === 'Enter') {
+      let maxId = Math.max.apply(Math,this.state.todos.map(function(o){return o.id;}));
       this.setState({todos: [
         ...this.state.todos,
         {
-          id: this.state.todos.length + 1,
+          id: maxId + 1,
           title: event.target.value,
           completed: false
         }
       ]})
       event.target.value = "";
     }
+  }
+
+  handleDestroy = (event) => {
+    let id = parseInt( event.target.parentElement.parentElement.id, 10 );
+    let index = this.state.todos.findIndex(element => {
+      return element.id === id;
+    })
+    let newTodos = this.state.todos;
+    newTodos.splice(index, 1);
+    this.setState({ todos: newTodos })
   }
 
   render() {
@@ -66,7 +81,9 @@ class App extends Component {
           <input className="new-todo" placeholder="What do you need to do today?" onKeyPress={this.handleKeyPress} autoFocus />
         </header>
 			  <section className="main">
-          <TodoList todos={this.state.todos} />
+          <TodoList todos={this.state.todos}>
+            <button className="destroy" onClick={this.handleDestroy}></button>
+          </TodoList>
 			  </section>
 			  <footer className="footer">
 			  	<span className="todo-count"><strong>0</strong> item(s) left</span>

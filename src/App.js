@@ -22,7 +22,6 @@ class TodoItem extends Component {
             : <input className="toggle" type="checkbox" onClick={this.handleCheck}/>
           }
 		  		<label>{this.props.title}</label>
-		  		<button className="destroy" onClick={this.handleDestroy}></button>
           {this.props.children}
 		  	</div>
 		  </li>
@@ -70,7 +69,20 @@ class App extends Component {
     })
     let newTodos = this.state.todos;
     newTodos.splice(index, 1);
-    this.setState({ todos: newTodos })
+    this.setState({ todos: newTodos });
+  }
+
+  handleClear = (event) => {
+    let newTodos = this.state.todos;
+    for (let i = 0; i < newTodos.length; i++) {
+      let index = this.state.todos.findIndex(element => {
+        return element.completed;
+      })
+      if (index > -1) {
+        newTodos.splice(index, 1);
+      }
+    }
+    this.setState({ todos: newTodos });
   }
 
   render() {
@@ -87,7 +99,7 @@ class App extends Component {
 			  </section>
 			  <footer className="footer">
 			  	<span className="todo-count"><strong>0</strong> item(s) left</span>
-			  	<button className="clear-completed">Clear completed</button>
+			  	<button className="clear-completed" onClick={this.handleClear}>Clear completed</button>
 			  </footer>
       </div>
     );
